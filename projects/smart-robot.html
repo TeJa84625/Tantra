@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Step-by-step tutorial: Build an AI-powered object tracking robot. Upload code and interact with terminal directly from the browser.">
+    <title>AI Tracking Robot | Tantra</title>
+
+    <!-- Instantly applies the saved theme from the Home page to prevent white-flashing -->
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const deviceTheme = systemPrefersDark ? 'dark' : 'light';
+        const finalTheme = (savedTheme === null || savedTheme === 'default') ? deviceTheme : savedTheme;
+        document.documentElement.setAttribute('data-theme', finalTheme);
+    </script>
+
+    <!-- SEO: JSON-LD Schema (Crucial for AI Search Engines & Google Rich Snippets) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "Build an AI Object Tracking Robot",
+        "description": "Learn how to wire and program an ESP32 robot that tracks objects.",
+        "author": { "@type": "Person", "name": "Jane Doe" },
+        "step": [
+            { "@type": "HowToStep", "name": "Gather Materials", "text": "Collect ESP32 and Motors." },
+            { "@type": "HowToStep", "name": "Wiring", "text": "Connect motors to L298N driver." },
+            { "@type": "HowToStep", "name": "Flash Code", "text": "Upload the C++ code to the ESP32." }
+        ]
+    }
+    </script>
+
+    <style>
+        /* === Variables & Base Reset === */
+        :root {
+            --bg: #f8f9fa; --surface: #ffffff; --text: #111827; --text-muted: #6b7280;
+            --border: #e5e7eb; --primary: #3b82f6; --primary-hover: #2563eb;
+            --secondary: #10b981; --secondary-hover: #059669;
+            --radius: 12px; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] {
+            --bg: #000000; --surface: #0a0a0a; --text: #ededed; --text-muted: #a1a1aa;
+            --border: #27272a; --shadow: 0 10px 15px -3px rgba(0,0,0,0.9);
+            --secondary: #059669; --secondary-hover: #047857;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); transition: background-color 0.3s, color 0.3s; display: flex; flex-direction: column; min-height: 100vh; }
+        a { text-decoration: none; color: inherit; }
+
+        /* === Navigation (Unified Mobile-First Design) === */
+        nav {
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem; display: flex; justify-content: space-between;
+            align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100;
+        }
+        .nav-left { display: flex; align-items: center; gap: 1.5rem; flex: 1; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: bold; font-size: 1.25rem; white-space: nowrap; }
+        .logo svg { color: var(--primary); }
+        
+        .search-form {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: var(--bg); border: 1px solid var(--border);
+            padding: 0.5rem 1rem; border-radius: 99px; flex: 1; max-width: 400px;
+        }
+        .search-form input { border: none; background: transparent; color: var(--text); outline: none; width: 100%; }
+        
+        .nav-links { display: flex; align-items: center; gap: 1.25rem; }
+        .nav-links a:hover { color: var(--primary); }
+        .icon-btn { background: transparent; border: none; color: var(--text); cursor: pointer; padding: 0.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .btn-auth { background: var(--primary); color: white !important; border: none; padding: 0.6rem 1.25rem; border-radius: 99px; cursor: pointer; font-weight: 500; transition: background 0.2s; }
+        .btn-auth:hover { background: var(--primary-hover); }
+
+        /* === Main Content Layout === */
+        main { flex: 1; width: 100%; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+
+        /* === Project Header & Meta === */
+        .project-header { margin-bottom: 2rem; }
+        .project-header h1 { font-size: 2.25rem; margin-bottom: 1.25rem; line-height: 1.2; letter-spacing: -0.025em; }
+        .hero-image { width: 100%; height: auto; max-height: 450px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 1.5rem; }
+        
+        .project-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem; }
+        .meta-actions { display: flex; gap: 0.75rem; }
+        .meta-actions button { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 99px; cursor: pointer; font-size: 0.85rem; transition: background 0.2s; display: flex; align-items: center; gap: 0.25rem; white-space: nowrap; }
+        .meta-actions button:hover { background: var(--bg); }
+
+        /* === Steps, Lists & Elements === */
+        .step { margin-top: 2.5rem; }
+        .step h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .step p { color: var(--text-muted); line-height: 1.6; margin-bottom: 1.25rem; }
+        
+        .materials-list { list-style: none; padding: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+        .materials-list li { display: flex; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+        .materials-list li:last-child { border-bottom: none; }
+        .materials-list li span:first-child { font-weight: 500; }
+        .materials-list li span:last-child { color: var(--primary); font-weight: bold; }
+        .location-badge { font-size: 0.8rem; font-weight: normal; color: var(--text-muted); margin-left: 0.5rem; }
+
+        /* === Code IDE Container === */
+        .ide-container { background: #121214; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 1.5rem; }
+        .ide-header { background: #1a1a1e; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); color: #a1a1aa; font-size: 0.85rem; flex-wrap: wrap; gap: 0.75rem; }
+        .ide-filename { font-family: monospace; }
+        .ide-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .ide-actions button, .ide-actions a { background: #27272a; color: #ededed; border: none; padding: 0.45rem 0.85rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: background 0.2s; text-align: center; display: inline-flex; align-items: center; }
+        .ide-actions button:hover { background: #3f3f46; }
+        .ide-actions .upload-btn { background: var(--primary); color: white; }
+        .ide-actions .upload-btn:hover { background: var(--primary-hover); }
+        .ide-actions .terminal-btn { background: var(--secondary); color: white; }
+        .ide-actions .terminal-btn:hover { background: var(--secondary-hover); }
+        
+        .ide-container pre { padding: 1.25rem; overflow-x: auto; margin: 0; background: #121214; }
+        .ide-container code { font-family: 'Courier New', Courier, monospace; color: #34d399; font-size: 0.9rem; line-height: 1.5; }
+
+        /* === Interactive Flasher Modal === */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
+        .modal-box { background: var(--surface); border: 1px solid var(--border); padding: 2rem 1.5rem; border-radius: var(--radius); max-width: 450px; width: 100%; position: relative; box-shadow: var(--shadow); text-align: center; }
+        .close { position: absolute; right: 1.25rem; top: 0.75rem; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+        
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 99px; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 0.75rem 1.5rem; border-radius: 99px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 0.5rem; transition: background 0.2s; }
+        .btn-secondary:hover { background: var(--bg); color: var(--text); }
+
+        /* Upload Progress Circle SVG style */
+        .upload-ui { display: none; flex-direction: column; align-items: center; justify-content: center; margin-top: 1.5rem; }
+        .circular-chart { max-width: 120px; max-height: 120px; display: block; margin: 10px auto; }
+        .circle-bg { fill: none; stroke: var(--border); stroke-width: 2.8; }
+        .circle { fill: none; stroke-width: 2.8; stroke-linecap: round; stroke: var(--primary); transition: stroke-dasharray 0.3s ease; }
+        .percentage { fill: var(--text); font-family: sans-serif; font-size: 0.55em; text-anchor: middle; font-weight: bold; }
+
+        /* === Complete Responsive Grid (Mobile Breakpoints) === */
+        @media (max-width: 768px) {
+            nav { padding: 0.75rem 1rem; flex-wrap: wrap; }
+            .nav-left { width: 100%; justify-content: space-between; gap: 1rem; }
+            .search-form { max-width: 100%; order: 3; width: 100%; flex: none; }
+            .nav-links { width: 100%; justify-content: flex-end; gap: 1rem; order: 2; }
+            
+            .project-header h1 { font-size: 1.75rem; }
+            .project-meta { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .meta-actions { width: 100%; }
+            .meta-actions button { flex: 1; justify-content: center; }
+
+            .ide-header { flex-direction: column; align-items: flex-start; }
+            .ide-actions { width: 100%; }
+            .ide-actions button, .ide-actions a { flex: 1; justify-content: center; font-size: 0.75rem; padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Unified Header / Navigation -->
+    <custom-header></custom-header>
+
+    <!-- Main Dynamic Content Container -->
+    <main class="container">
+        <header class="project-header">
+            <h1>AI-Powered Object Tracking Robot</h1>
+            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80" alt="Completed Robot" class="hero-image">
+            
+            <div class="project-meta">
+                <span>By <b>Jane Doe</b> • Published July 2026 • © Tantra</span>
+                <div class="meta-actions">
+                    <button onclick="shareProject()">📤 Share</button>
+                    <button onclick="window.print()">📄 Save PDF</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Step 1: Materials -->
+        <section class="step">
+            <h2>Step 1: Materials Required <span id="locationBadge" class="location-badge"></span></h2>
+            <ul class="materials-list">
+                <li><span>ESP32 NodeMCU</span> <span class="price-tag" data-base-usd="6.00">$6.00</span></li>
+                <li><span>L298N Motor Driver</span> <span class="price-tag" data-base-usd="4.00">$4.00</span></li>
+                <li><span>DC Motors & Chassis</span> <span class="price-tag" data-base-usd="15.00">$15.00</span></li>
+            </ul>
+        </section>
+
+        <!-- Step 2: Code, Flasher & Terminal -->
+        <section class="step">
+            <h2>Step 2: Flash the Firmware & Debug</h2>
+            <p>Connect your ESP32 to your computer via USB. Review the code, upload it directly from your web browser, or launch the terminal to analyze real-time output streams.</p>
+            
+            <div class="ide-container">
+                <div class="ide-header">
+                    <span class="ide-filename">tracking_logic.ino</span>
+                    <div class="ide-actions">
+                        <button onclick="copyCode()">Copy Code</button>
+                        <a href="/tools/terminal.html" class="terminal-btn" target="_blank" rel="noopener noreferrer">🖥️ Connect to Terminal</a>
+                        <!-- <button class="upload-btn" data-source-url="codes/rador_test.hex" data-device-model="arduino_uno" onclick="openFlasher()">🔌 Upload to Device</button> -->
+                        <!-- data-source-url="https://raw.githubusercontent.com/TeJa84625/IOT/refs/heads/main/rador_test.hex"  -->
+                        <button class="upload-btn" 
+                                data-source-url="/codes/rador_test.ino.hex" 
+                                data-device-model="arduino_uno" 
+                                onclick="openFlasher()">
+                                🔌 Upload to Device
+                        </button>
+                    </div>
+                </div>
+                <pre><code id="sourceCode">#include &lt;WiFi.h&gt;
+
+// Motor Pins
+const int motorA = 12;
+const int motorB = 14;
+
+void setup() {
+    Serial.begin(115200);
+    pinMode(motorA, OUTPUT);
+    pinMode(motorB, OUTPUT);
+    Serial.println("System Booted. Ready for AI input.");
+}
+
+void loop() {
+    // Awaiting serial coordinates...
+    delay(10);
+}</code></pre>
+            </div>
+        </section>
+    </main>
+
+    <!-- Interactive Flasher Modal -->
+    <div id="flashModal" class="modal">
+        <div class="modal-box">
+            <span class="close" onclick="closeFlasher()">&times;</span>
+            <h2 id="flashTitle">Ready to Flash</h2>
+            <p id="flashDesc" style="margin: 1rem 0; color: var(--text-muted);">Warning: This will erase existing code on your connected device. Ensure your USB cable supports data transfer.</p>
+            
+            <div id="initialUi">
+                <button class="btn-primary" onclick="initiateWebSerial()">Select Port & Flash</button>
+                <button class="btn-secondary" onclick="closeFlasher()">Cancel</button>
+            </div>
+
+            <!-- Upload/Buffer Progress UI -->
+            <div id="uploadUi" class="upload-ui">
+                <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="circle" id="progressCircle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <text x="18" y="20.35" class="percentage" id="progressText">0%</text>
+                </svg>
+                <p id="progressStatus" style="margin-top: 1rem; font-weight: bold;">Connecting...</p>
+            </div>
+            
+            <button id="finishBtn" class="btn-primary" style="display: none; background: #00b894;" onclick="closeFlasher()">Done</button>
+        </div>
+    </div>
+
+    <custom-footer></custom-footer>
+
+    <!-- Unified Centralized Logic Architecture Link -->
+    <script src="/navibar.js" defer></script>
+    <script src="/projects.js"></script>
+    <script src="/code.js"></script>
+</body>
+</html>

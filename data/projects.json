@@ -1,0 +1,130 @@
+[
+  {
+    "title": "Ultrasonic Radar System",
+    "tags": "Arduino, Radar, Servo, Processing",
+    "category": "arduino",
+    "author": "Maya Lin",
+    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500",
+    "url": "/projects/smart-robot.html"
+  },
+  {
+    "title": "ESP32-CAM Smart Home CCTV Camera",
+    "tags": "ESP32, Camera, Security, Wi-Fi",
+    "category": "esp32",
+    "author": "Marcus Vance",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=500",
+    "url": "/project/esp32-cctv"
+  },
+  {
+    "title": "DIY Self-Draining Soap Holder",
+    "tags": "3D Printing, CAD, DIY, Home",
+    "category": "3d-printing",
+    "author": "Elena Rostova",
+    "image": "https://csg.us-east-1.prd.tinkercad.com/things/b6Gt9HSWakX/t725.png?rev=1784136580130000000&s=&v=1&cb=1784142440472",
+    "url": "/project/soap-holder-3d"
+  },
+  {
+    "title": "ESP32 BLE Keyboard",
+    "tags": "ESP32, BLE, HID, Keyboard",
+    "category": "esp32",
+    "author": "Jordan K.",
+    "image": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500",
+    "url": "/project/esp32-keyboard"
+  },
+  {
+    "title": "Smart Parking Management System",
+    "tags": "Arduino, IR Sensors, Servo, LCD",
+    "category": "arduino",
+    "author": "Sanjay Patel",
+    "image": "https://media.istockphoto.com/id/1010378254/photo/top-view-of-car-sharing-parking-lot-equipped-with-charging-station-and-batteries.jpg?s=612x612&w=0&k=20&c=MH4hIIJp2TIL0g90VAKMavlN6Mz2jDkTBWtVSUCzEQU=",
+    "url": "/project/smart-parking"
+  },
+  {
+    "title": "Smart Bin",
+    "tags": "Arduino, Ultrasonic, Servo, Automation",
+    "category": "arduino",
+    "author": "Chloe Bennett",
+    "image": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=500",
+    "url": "/project/smart-dustbin"
+  },
+  {
+    "title": "6-DOF Robotic Arm",
+    "tags": "Arduino, Robotics, Servos, Kinematics",
+    "category": "robotics",
+    "author": "Liam Vance",
+    "image": "https://media.istockphoto.com/id/169987603/photo/robotic-arm.jpg?s=612x612&w=0&k=20&c=GpsWIpCh1eRrT41aKsUzPBUPkZXw8m-VVC66t8leol8=",
+    "url": "/project/6dof-robotic-arm"
+  },
+  {
+    "title": "Smart Door Lock",
+    "tags": "Arduino, Security, Solenoid, Fingerprint",
+    "category": "arduino",
+    "author": "Clara Oswald",
+    "image": "https://media.istockphoto.com/id/1472954300/photo/newly-renovated-condo.jpg?s=612x612&w=0&k=20&c=sJreE1Il_W__Rg757t9LwMFh8wxxfL2N9pF0C-6xBSQ=",
+    "url": "/project/smart-door-lock"
+  },
+  {
+    "title": "Temperature & Humidity Weather Station",
+    "tags": "ESP8266, DHT11, IoT, Blynk",
+    "category": "iot",
+    "author": "Nikhil Sharma",
+    "image": "https://media.istockphoto.com/id/2244837279/photo/digital-weather-station-showing-indoor-temperature-and-humidity-in-cozy-home-bedroom-interior.jpg?s=612x612&w=0&k=20&c=vAEr_y8zEIH-CVaHpOd28gDZJu4HFX8BZNTh1V1Ixk4=",
+    "url": "/project/temp-humidity-station"
+  },
+  {
+    "title": "Mini ATM Machine",
+    "tags": "Arduino, RFID, Keypad, Servo",
+    "category": "arduino",
+    "author": "Tariq Mahmood",
+    "image": "https://media.istockphoto.com/id/587532258/photo/people-withdrawing-cash-at-an-atm.jpg?s=612x612&w=0&k=20&c=dVN4b0Nlq8XvKELni2c8YSFznSK9OQvHz8JNdPFwmDg=",
+    "url": "/project/mini-atm"
+  },
+  {
+    "title": "Automatic Rain Detection Alarm System",
+    "tags": "Arduino, Rain Sensor, Buzzer, Weather",
+    "category": "arduino",
+    "author": "Zoe Henderson",
+    "image": "https://media.istockphoto.com/id/1476190237/photo/summer-rain-raindrops-bad-weather-depression.jpg?s=612x612&w=0&k=20&c=GUJvhhU3WVvHhJ3kU4E33fVUzICegLq1sh2msWS5kNk=",
+    "url": "/project/rain-detector"
+  },
+  {
+    "title": "Raspberry Pi Smart Magic Mirror",
+    "tags": "Raspberry Pi, Smart Mirror, MagicMirror2, Display",
+    "category": "raspberry-pi",
+    "author": "Julian Cole",
+    "image": "https://images.unsplash.com/photo-1510519138101-570d1dca3d66?w=500",
+    "url": "/project/rpi-smart-mirror"
+  },
+  {
+    "title": "IoT Soil & Plant Moisture Monitor",
+    "tags": "ESP32, Sensors, IoT, Blynk, Plants",
+    "category": "iot",
+    "author": "Amara Okafor",
+    "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500",
+    "url": "/project/iot-plant-monitor"
+  },
+  {
+    "title": "Custom Ergonomic 3D Printed Laptop Stand",
+    "tags": "3D Printing, Ergonomics, PLA, Design",
+    "category": "3d-printing",
+    "author": "Tobias Lind",
+    "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500",
+    "url": "/project/3d-laptop-stand"
+  },
+  {
+    "title": "Self-Balancing Two-Wheeled Robot",
+    "tags": "Arduino, MPU6050, Gyroscope, PID, Robotics",
+    "category": "robotics",
+    "author": "Yuki Tanaka",
+    "image": "https://images.unsplash.com/photo-1531747118685-ca8fa6e08806?w=500",
+    "url": "/project/self-balancing-robot"
+  },
+  {
+    "title": "Raspberry Pi Retro Arcade Gaming Console",
+    "tags": "Raspberry Pi, RetroPie, Gaming, Emulation",
+    "category": "raspberry-pi",
+    "author": "Gavin Miller",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500",
+    "url": "/project/pi-retro-console"
+  }
+]

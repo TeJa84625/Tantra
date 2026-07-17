@@ -1,0 +1,76 @@
+[
+  {
+    "categoryName": "Beginner Projects",
+    "categorySlug": "beginner",
+    "projects": [
+      {
+        "name": "Smart Touchless Waste Bin",
+        "level": "Beginner / Automation",
+        "author": "Chloe Bennett",
+        "image": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=500&q=80",
+        "url": "/project/smart-dustbin"
+      },
+      {
+        "name": "Automatic Rain Detection Alarm System",
+        "level": "Beginner / Weather",
+        "author": "Zoe Henderson",
+        "image": "https://media.istockphoto.com/id/1476190237/photo/summer-rain-raindrops-bad-weather-depression.jpg?s=612x612&w=0&k=20&c=GUJvhhU3WVvHhJ3kU4E33fVUzICegLq1sh2msWS5kNk=",
+        "url": "/project/rain-detector"
+      },
+      {
+        "name": "IoT Soil & Plant Moisture Monitor",
+        "level": "Beginner / Plants",
+        "author": "Amara Okafor",
+        "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=500&q=80",
+        "url": "/project/iot-plant-monitor"
+      }
+    ]
+  },
+  {
+    "categoryName": "Top ESP32",
+    "categorySlug": "esp32",
+    "projects": [
+      {
+        "name": "ESP32-CAM Smart Home CCTV Camera",
+        "level": "Advanced / Camera",
+        "author": "Marcus Vance",
+        "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=500&q=80",
+        "url": "/project/esp32-cctv"
+      },
+      {
+        "name": "ESP32 BLE Keyboard",
+        "level": "Intermediate / Bluetooth",
+        "author": "Jordan K.",
+        "image": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80",
+        "url": "/project/esp32-keyboard"
+      },
+      {
+        "name": "Temperature & Humidity Weather Station",
+        "level": "Beginner / Cloud",
+        "author": "Nikhil Sharma",
+        "image": "https://media.istockphoto.com/id/2244837279/photo/digital-weather-station-showing-indoor-temperature-and-humidity-in-cozy-home-bedroom-interior.jpg?s=612x612&w=0&k=20&c=vAEr_y8zEIH-CVaHpOd28gDZJu4HFX8BZNTh1V1Ixk4=",
+        "url": "/project/temp-humidity-station"
+      }
+    ]
+  },
+  {
+    "categoryName": "New to 3D Printing",
+    "categorySlug": "3d-printing",
+    "projects": [
+      {
+        "name": "DIY Self-Draining Soap Holder",
+        "level": "Beginner / CAD",
+        "author": "Elena Rostova",
+        "image": "https://csg.us-east-1.prd.tinkercad.com/things/b6Gt9HSWakX/t725.png?rev=1784136580130000000&s=&v=1&cb=1784142440472",
+        "url": "/project/soap-holder-3d"
+      },
+      {
+        "name": "Custom Ergonomic 3D Printed Laptop Stand",
+        "level": "Intermediate / PLA Design",
+        "author": "Tobias Lind",
+        "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=500&q=80",
+        "url": "/project/3d-laptop-stand"
+      }
+    ]
+  }
+]

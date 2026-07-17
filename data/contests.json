@@ -1,0 +1,30 @@
+[
+  {
+    "title": "The Hackaday Prize 2026",
+    "desc": "The ultimate hardware design challenge. Build creative, open-source technology, modules, and devices to solve global, real-world problems.",
+    "startDate": "2026-05-01",
+    "endDate": "2026-10-25",
+    "url": "https://hackaday.io/prize"
+  },
+  {
+    "title": "element14 Community Design Challenges",
+    "desc": "Receive a free kit of sponsored parts (sensors, microcontrollers, test equipment) and build your project while blogging your design journey.",
+    "startDate": "2026-06-01",
+    "endDate": "2026-09-15",
+    "url": "https://community.element14.com/challenges-projects/design-challenges/"
+  },
+  {
+    "title": "Instructables Interactive 3D Printing & Coding Contests",
+    "desc": "Showcase your physical creations. Enter recurring themed challenges like the 3D Printing Contest or the Microcontroller Contest to win workshop tools.",
+    "startDate": "2026-07-01",
+    "endDate": "2026-08-31",
+    "url": "https://www.instructables.com/contest/"
+  },
+  {
+    "title": "Hackster.io Developer Contests",
+    "desc": "Compete in hardware-specific challenges sponsored by top silicon vendors like AMD, Nordic Semiconductor, Arduino, and Infineon to win thousands in hardware prizes.",
+    "startDate": "2026-06-15",
+    "endDate": "2026-10-12",
+    "url": "https://www.hackster.io/contests"
+  }
+]

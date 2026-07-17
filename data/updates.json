@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Direct Web Flashing — Upload Code Directly From Your Browser for Free",
+    "tag": "Platform Feature",
+    "image": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80",
+    "btnText": " ",
+    "url": " "
+  },
+  {
+    "title": "Explore Fresh DIY Electronics & IoT Projects Added This Week",
+    "tag": "New Projects",
+    "image": "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&w=800&q=80",
+    "btnText": "Browse Projects",
+    "url": "/projects.html"
+  },
+  {
+    "title": "Zero-Middleware Web Terminal: Direct Device Communication & Real-time Logs",
+    "tag": "Developer Tool",
+    "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+    "btnText": "Open Web Terminal",
+    "url": "/tools/terminal.html"
+  }
+]

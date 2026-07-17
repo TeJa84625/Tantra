@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Add Your Project
+        </title>
+        <script>
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const deviceTheme = systemPrefersDark ? 'dark' : 'light';
+            const finalTheme = (savedTheme === null || savedTheme === 'default') ? deviceTheme : savedTheme;
+            document.documentElement.setAttribute('data-theme', finalTheme);
+        </script>
+    </head>
+    <body>
+        <custom-header></custom-header>
+        <custom-footer></custom-footer>
+    </body>
+    <script src="navibar.js" defer></script>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Tantra</title>
+    
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const deviceTheme = systemPrefersDark ? 'dark' : 'light';
+        const finalTheme = (savedTheme === null || savedTheme === 'default') ? deviceTheme : savedTheme;
+        document.documentElement.setAttribute('data-theme', finalTheme);
+    </script>
+
+    <style>
+        /* === Color Palette & High Contrast Text Variables === */
+        :root {
+            --bg: #f8f9fa; 
+            --surface: #ffffff; 
+            --text: #111827;         /* Deep gray/black for ultra-high contrast in Light Mode */
+            --text-muted: #4b5563;   /* Accessible medium gray for description text */
+            --border: #d1d5db; 
+            --primary: #2563eb; 
+            --primary-hover: #1d4ed8;
+            --radius: 12px; 
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+        }
+        [data-theme="dark"] {
+            --bg: #09090b; 
+            --surface: #18181b; 
+            --text: #f4f4f5;         /* Crisp white-smoke for high contrast in Dark Mode */
+            --text-muted: #a1a1aa;   /* Soft, visible gray for Dark Mode secondary text */
+            --border: #27272a; 
+            --primary: #3b82f6; 
+            --primary-hover: #60a5fa;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            transition: background-color 0.2s, color 0.2s; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* === Main Content Layout === */
+        main { flex: 1; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+        
+        .page-header { 
+            margin-bottom: 2rem; 
+            padding-bottom: 1.5rem; 
+            border-bottom: 1px solid var(--border); 
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .page-header h1 { font-size: 2.25rem; font-weight: 800; color: var(--text); }
+        .page-header p { color: var(--text-muted); font-size: 1.1rem; }
+
+        .btn-add-project {
+            background: var(--primary);
+            color: #ffffff !important;
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-add-project:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* === Category Filter Section === */
+        .filter-container { 
+            display: flex; 
+            gap: 0.75rem; 
+            overflow-x: auto; 
+            padding: 0.5rem 0 1.5rem 0; 
+            margin-bottom: 1.5rem; 
+            scrollbar-width: none; /* Firefox */
+        }
+        .filter-container::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
+        
+        .filter-chip { 
+            background: var(--surface); 
+            border: 1px solid var(--border); 
+            color: var(--text);
+            padding: 0.6rem 1.25rem; 
+            border-radius: 99px; 
+            font-size: 0.9rem; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            white-space: nowrap; 
+        }
+        .filter-chip:hover { 
+            border-color: var(--primary); 
+            color: var(--primary); 
+        }
+        .filter-chip.active { 
+            background: var(--primary); 
+            border-color: var(--primary); 
+            color: #ffffff; 
+        }
+
+        /* === Project Grid === */
+        .project-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 1.5rem; 
+        }
+        .card { 
+            background: var(--surface); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius); 
+            overflow: hidden; 
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .card:hover { 
+            transform: translateY(-4px); 
+            border-color: var(--primary); 
+            box-shadow: 0 12px 20px -5px rgba(0,0,0,0.15);
+        }
+        .card-img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            border-bottom: 1px solid var(--border); 
+        }
+        .card-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+        .card-tag { 
+            font-size: 0.75rem; 
+            color: var(--primary); 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            margin-bottom: 0.5rem; 
+        }
+        .card-title { 
+            margin: 0 0 0.75rem 0; 
+            font-size: 1.2rem; 
+            line-height: 1.4; 
+            color: var(--text);
+            font-weight: 600;
+        }
+        .card-author { 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+            margin-top: auto; 
+        }
+
+        .no-results { 
+            text-align: center; 
+            padding: 5rem 1rem; 
+            color: var(--text-muted); 
+            font-size: 1.2rem; 
+            background: var(--surface); 
+            border-radius: var(--radius); 
+            border: 1px dashed var(--border); 
+            grid-column: 1 / -1;
+        }
+
+        /* === Pagination Controls === */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .pagination-info {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+        .pagination-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pagination-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .page-numbers {
+            display: flex;
+            gap: 0.25rem;
+        }
+        .page-num-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .page-num-btn:hover {
+            border-color: var(--border);
+        }
+        .page-num-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+        .pagination-limit {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+        .pagination-select {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <custom-header></custom-header>
+    
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <div class="header-top">
+                    <h1 id="results-title">All Hardware Projects</h1>
+                    <!-- <a href="addproject.html" class="btn-add-project">+ Add Your Project</a> -->
+                </div>
+                <p id="results-subtitle">Loading latest community builds...</p>
+            </div>
+
+            <div class="filter-container" id="filterBar">
+                <button class="filter-chip active" data-category="all">All Projects</button>
+                <button class="filter-chip" data-category="arduino">Arduino</button>
+                <button class="filter-chip" data-category="esp32">ESP32</button>
+                <button class="filter-chip" data-category="raspberry-pi">Raspberry Pi</button>
+                <button class="filter-chip" data-category="iot">IoT</button>
+                <button class="filter-chip" data-category="robotics">Robotics</button>
+                <button class="filter-chip" data-category="3d-printing">3D Printing</button>
+            </div>
+
+            <div class="project-grid" id="projects-container">
+                </div>
+
+            <div class="pagination-container" id="paginationSection" style="display: none;">
+                <div class="pagination-info" id="paginationInfo">
+                    Showing 0-0 of 0 projects
+                </div>
+                <div class="pagination-actions">
+                    <button id="prevBtn" class="pagination-btn" aria-label="Previous Page">&larr; Prev</button>
+                    <div class="page-numbers" id="pageNumbers"></div>
+                    <button id="nextBtn" class="pagination-btn" aria-label="Next Page">Next &rarr;</button>
+                </div>
+                <div class="pagination-limit">
+                    <label for="limitSelect">Show:</label>
+                    <select id="limitSelect" class="pagination-select">
+                        <option value="6" selected>6</option>
+                        <option value="12">12</option>
+                        <option value="24">24</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <custom-footer></custom-footer>
+
+    <script>
+        let cachedProjects = [];
+        let currentPage = 1;
+        let itemsPerPage = 6;
+
+        // === Fetch & Process Project Filter States ===
+        async function loadProjects() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q')?.toLowerCase().trim();
+            const category = urlParams.get('category')?.toLowerCase().trim();
+            
+            const titleEl = document.getElementById('results-title');
+            const subEl = document.getElementById('results-subtitle');
+            const container = document.getElementById('projects-container');
+            const searchInput = document.getElementById('pageSearch');
+
+            // Sync Header input values with search arguments
+            if (searchInput) {
+                searchInput.value = query || '';
+            }
+
+            if (query) {
+                titleEl.textContent = `Search Results for "${query}"`;
+                updateActiveFilterChip(null);
+            } else if (category && category !== 'all') {
+                const formattedCat = category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                titleEl.textContent = `${formattedCat} Projects`;
+                updateActiveFilterChip(category);
+            } else {
+                titleEl.textContent = `All Hardware Projects`;
+                updateActiveFilterChip('all');
+            }
+
+            try {
+                if (cachedProjects.length === 0) {
+                    const res = await fetch('/data/projects.json');
+                    if (!res.ok) throw new Error("File fetch failure");
+                    cachedProjects = await res.json();
+                }
+                
+                let filtered = cachedProjects.filter(p => {
+                    if (query) {
+                        return  p.title.toLowerCase().includes(query) || 
+                                p.tags.toLowerCase().includes(query) || 
+                                p.author.toLowerCase().includes(query);
+                    }
+                    if (category && category !== 'all') {
+                        return p.category.toLowerCase() === category;
+                    }
+                    return true;
+                });
+
+                subEl.textContent = `Displaying ${filtered.length} project${filtered.length !== 1 ? 's' : ''}`;
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-results">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2" style="margin-bottom:1rem;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <p>We couldn't find anything matching your filters.</p>
+                        </div>`;
+                    document.getElementById('paginationSection').style.display = 'none';
+                    return;
+                }
+
+                // Handle Pagination calculations
+                const totalItems = filtered.length;
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+                
+                // Keep currentPage within bounds
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+                const paginatedProjects = filtered.slice(startIndex, endIndex);
+
+                // Render projects
+                container.innerHTML = paginatedProjects.map(p => `
+                    <a href="${p.url || '#'}" class="card">
+                        <img src="${p.image || 'https://via.placeholder.com/300x200'}" alt="${p.title}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200'">
+                        <div class="card-body">
+                            <span class="card-tag">${p.tags}</span>
+                            <h3 class="card-title">${p.title}</h3>
+                            <p class="card-author">By ${p.author}</p>
+                        </div>
+                    </a>
+                `).join('');
+
+                renderPaginationControls(totalItems, totalPages, startIndex, endIndex);
+
+            } catch (e) {
+                subEl.textContent = "Error loading database file `/data/projects.json`.";
+                console.error(e);
+            }
+        }
+
+        function renderPaginationControls(totalItems, totalPages, startIndex, endIndex) {
+            const pagSection = document.getElementById('paginationSection');
+            if (totalPages <= 1) {
+                pagSection.style.display = 'none';
+                return;
+            }
+            pagSection.style.display = 'flex';
+
+            // Update range text
+            document.getElementById('paginationInfo').innerHTML = `
+                Showing <strong>${startIndex + 1}-${endIndex}</strong> of <strong>${totalItems}</strong> projects
+            `;
+
+            // Prev & Next state toggling
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+
+            // Generate page numbers
+            const pageNumbersContainer = document.getElementById('pageNumbers');
+            pageNumbersContainer.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `page-num-btn ${i === currentPage ? 'active' : ''}`;
+                btn.textContent = i;
+                btn.addEventListener('click', () => {
+                    currentPage = i;
+                    loadProjects();
+                });
+                pageNumbersContainer.appendChild(btn);
+            }
+        }
+
+        function updateActiveFilterChip(category) {
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                if (chip.getAttribute('data-category') === category) {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+        }
+
+        // Intercept navigation triggers & fix All Projects chip bug
+        function updateURLParameter(key, value) {
+            const url = new URL(window.location);
+            if (value) {
+                url.searchParams.set(key, value);
+                if (key === 'q') url.searchParams.delete('category');
+                if (key === 'category') url.searchParams.delete('q');
+            } else {
+                url.searchParams.delete(key);
+            }
+            window.history.pushState({}, '', url);
+            currentPage = 1; // Reset to page 1 on filter/search change
+            loadProjects(); 
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load setup for page range sizes
+            const limitSelect = document.getElementById('limitSelect');
+            itemsPerPage = parseInt(limitSelect.value, 10);
+
+            loadProjects();
+
+            // Category click handling (Fix: Clean and wipe all parameters when selecting 'all')
+            document.getElementById('filterBar').addEventListener('click', (e) => {
+                const targetBtn = e.target.closest('.filter-chip');
+                if (!targetBtn) return;
+                
+                const selectCategory = targetBtn.getAttribute('data-category');
+                const url = new URL(window.location);
+                
+                if (selectCategory === 'all') {
+                    url.searchParams.delete('category');
+                    url.searchParams.delete('q');
+                    window.history.pushState({}, '', url);
+                    currentPage = 1;
+                    loadProjects();
+                } else {
+                    updateURLParameter('category', selectCategory);
+                }
+            });
+
+            // Pagination button events
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadProjects();
+                }
+            });
+
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                currentPage++;
+                loadProjects();
+            });
+
+            limitSelect.addEventListener('change', (e) => {
+                itemsPerPage = parseInt(e.target.value, 10);
+                currentPage = 1;
+                loadProjects();
+            });
+
+            window.addEventListener('popstate', () => {
+                currentPage = 1;
+                loadProjects();
+            });
+        });
+
+        // Global callback used by navbar element to sync search submits
+        function handleNavbarSearch(queryValue) {
+            updateURLParameter('q', queryValue);
+        }
+    </script>
+    <script src="navibar.js" defer></script>
+</body>
+</html>

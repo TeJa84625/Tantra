@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tantra Console</title>
+    <link rel="stylesheet" href="terminal.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="/images/anahata.png" alt="Tantra Logo" style="height: 24px; width: auto; object-fit: contain; filter: brightness(0) invert(1);">
+            Tantra Console
+        </div>
+        <div class="navbar-tools" style="position: relative; display: none; align-items: center;">
+            <button id="btn-tools" class="btn btn-small" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer;">
+                Tools ⚙️
+            </button>
+            <div id="tools-menu" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 5px; background: #1e1e1e; border: 1px solid #333; border-radius: 4px; padding: 5px; min-width: 140px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); z-index: 999;">
+                <button id="btn-tool-radar" class="btn btn-small" style="width: 100%; text-align: left; background: transparent; color: white; border: none; cursor: pointer;">
+                    📡 Open Radar
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="disconnect-error-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>⚠️ Connection Lost</h3>
+            <p style="margin-top: 10px; color: var(--text-secondary); font-size: 13px;">
+                Unfortunately the device got disconnected. Please reconnect it to continue.
+            </p>
+            <div class="modal-actions" style="justify-content: center; margin-top: 20px;">
+                <button id="btn-disconnect-ok" class="btn btn-accent">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="view-container">
+
+        <div id="setup-view" class="view active">
+            <div class="setup-card">
+                <h2>Connect Device</h2>
+                <p>Initialize a raw serial connection to your connected development board.</p>
+
+                <div class="otg-warning">
+                    <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; display: inline-block;">
+                        <path
+                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01">
+                        </path>
+                    </svg>
+                    <strong>Mobile/Tablet Note:</strong> You must use a compatible OTG adapter or data-capable USB-C
+                    cable to bridge the hardware to your device.
+                </div>
+
+                <ul class="instructions">
+                    <li>
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M21 8v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zM10 12h4M7 12h.01M17 12h.01">
+                            </path>
+                        </svg>
+                        <span>Connect your device to a data-capable USB port.</span>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span>Ensure external serial monitors (e.g., Arduino IDE) are closed to free the COM port
+                            lock.</span>
+                    </li>
+                </ul>
+                <button id="btn-connect" class="btn btn-accent"
+                    style="display: inline-flex; align-items: center; gap: 8px;">
+                    <svg viewBox="-2 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
+                        <path
+                            d="M20,7167 L18.744,7167 C17.996,7171 15,7171.95 13,7171.95 L13,7178 C13,7178.552 12.552,7179 12,7179 C11.448,7179 11,7178.552 11,7178 L11,7175.95 C8,7175.95 5.699,7174.603 5.108,7170.808 C4.469,7170.474 4.003,7169.813 4.003,7169.042 C4.003,7167.937 4.902,7167.042 6.007,7167.042 C7.111,7167.042 8.013,7167.937 8.013,7169.042 C8.013,7169.746 7.66,7170.362 7.11,7170.718 C7.553,7173.274 9,7173.891 11,7174.014 L11,7164 L8.948,7164 L11.948,7159 L14.948,7164 L13,7164 L13,7170.004 C15,7169.852 16.245,7169 16.744,7167 L16,7167 L16,7163 L20,7163 L20,7167 Z"
+                            transform="translate(-4.003, -7159)"></path>
+                    </svg>
+                    Initialize Connection
+                </button>
+            </div>
+        </div>
+
+        <div id="terminal-view" class="view">
+            <div class="terminal-header">
+                <div class="device-info">
+                    <span class="status-dot"></span>
+                    <span>Console</span>
+                    <span id="hw-device-name" class="device-name">[Unknown Device]</span>
+                </div>
+
+                <div class="terminal-controls">
+                    <label class="toggle-group">
+                        <input type="checkbox" id="toggle-timestamp" checked> Timestamp
+                    </label>
+                    <label class="toggle-group">
+                        <input type="checkbox" id="toggle-autoscroll" checked> Autoscroll
+                    </label>
+
+                    <select id="baud-selector" class="app-select" title="Baud Rate">
+                        <option value="9600">9600</option>
+                        <option value="38400">38400</option>
+                        <option value="115200" selected>115200</option>
+                        <option value="921600">921600</option>
+                    </select>
+
+                    <button id="btn-clear-log" class="btn-small">
+                        <svg class="icon-sm" viewBox="0 0 24 24">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg>
+                        Clear
+                    </button>
+                    <button id="btn-download-log" class="btn-small">
+                        <svg class="icon-sm" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+                        </svg>
+                        Save Log
+                    </button>
+                    <button id="btn-disconnect" class="btn-small btn-danger">
+                        <svg class="icon-sm" viewBox="0 0 24 24">
+                            <path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"></path>
+                        </svg>
+                        Disconnect
+                    </button>
+                </div>
+            </div>
+
+            <div id="terminal-output" class="terminal-window"></div>
+
+            <div class="terminal-input-group">
+                <input type="text" id="terminal-input" class="app-input" placeholder="Enter command..."
+                    autocomplete="off">
+                <button id="btn-send" class="btn btn-accent">
+                    <svg class="icon-sm" viewBox="0 0 24 24">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Terminate Session?</h3>
+            <p style="margin-top: 10px; color: var(--text-secondary); font-size: 13px;">Do you want to save the current
+                terminal buffer to a log file before disconnecting?</p>
+            <div class="modal-actions">
+                <button id="btn-cancel-disconnect" class="btn">Cancel</button>
+                <button id="btn-skip-log" class="btn btn-danger">Disconnect</button>
+                <button id="btn-save-log" class="btn btn-accent">Save logs & Disconnect</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="radar-prompt-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>📡 Radar Signal Detected</h3>
+            <p style="margin-top: 10px; color: var(--text-secondary); font-size: 13px;">
+                Incoming data contains radar sweep coordinates. Do you want to open the live radar view?
+            </p>
+            <div class="modal-actions">
+                <button id="btn-radar-cancel" class="btn">Cancel</button>
+                <button id="btn-radar-yes" class="btn btn-accent">Yes, open Radar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="radar-view-modal" class="modal-overlay">
+        <div class="modal-box" style="width: 90%; max-width: 500px; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0;">Live Radar View</h3>
+                <span id="radar-stats" style="font-family: monospace; color: #0f0;">A: 0° | D: 0cm</span>
+            </div>
+            
+            <div style="background: #001100; border: 2px solid #333; border-radius: 8px; overflow: hidden; position: relative;">
+                <canvas id="radar-canvas" width="400" height="400" style="display: block; margin: 0 auto;"></canvas>
+            </div>
+            
+            <div class="modal-actions" style="justify-content: center; margin-top: 20px;">
+                <button id="btn-close-radar" class="btn btn-danger">Close Radar View</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="terminal.js"></script>
+</body>
+
+</html>

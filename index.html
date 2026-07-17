@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tantra | Hardware & IoT Tutorials</title>
+    
+    <!-- Script placed in head prevents white-flash on reload -->
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const deviceTheme = systemPrefersDark ? 'dark' : 'light';
+        const finalTheme = (savedTheme === null || savedTheme === 'default') ? deviceTheme : savedTheme;
+        document.documentElement.setAttribute('data-theme', finalTheme);
+    </script>
+
+    <style>
+        /* === Variables & Reset === */
+        :root {
+            --bg: #f8f9fa; --surface: #ffffff; --text: #111827; --text-muted: #6b7280;
+            --border: #e5e7eb; --primary: #3b82f6; --primary-hover: #2563eb;
+            --radius: 12px; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] {
+            --bg: #000000; --surface: #0a0a0a; --text: #ededed; --text-muted: #a1a1aa;
+            --border: #27272a; --shadow: 0 10px 15px -3px rgba(0,0,0,0.9);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { overflow-x: hidden; width: 100%; position: relative; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); transition: background-color 0.3s, color 0.3s; }
+        a { text-decoration: none; color: inherit; }
+
+        /* === Navigation === */
+        nav {
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem; display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 1rem; position: sticky; top: 0; z-index: 100;
+        }
+        .nav-left { display: flex; align-items: center; gap: 2rem; flex: 1; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: bold; font-size: 1.25rem; }
+        .logo svg { color: var(--primary); }
+        
+        .search-form {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: var(--bg); border: 1px solid var(--border);
+            padding: 0.5rem 1rem; border-radius: 99px; flex: 1; max-width: 400px;
+        }
+        .search-form input { border: none; background: transparent; color: var(--text); outline: none; width: 100%; }
+        
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+        .icon-btn { background: transparent; border: none; color: var(--text); cursor: pointer; padding: 0.5rem; border-radius: 50%; }
+        .btn-auth { background: var(--primary); color: white !important; border: none; padding: 0.6rem 1.25rem; border-radius: 99px; cursor: pointer; font-weight: 500;}
+
+        /* === Full-Width Hero Slider === */
+        .hero-slider { position: relative; width: 100%; height: 85vh; min-height: 400px; max-height: 600px; background: var(--bg); overflow: hidden; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease-in-out; display: flex; align-items: flex-end; z-index: 1; }
+        .slide.active { opacity: 1; z-index: 2; }
+        .slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%); }
+        .slide-content { position: relative; z-index: 3; padding: 3rem; width: 100%; max-width: 1200px; margin: 0 auto; color: white; margin-bottom: 2rem; }
+        .slide-tag { display: inline-block; background: var(--primary); color: white; font-size: 0.75rem; font-weight: bold; padding: 0.25rem 0.75rem; border-radius: 99px; margin-bottom: 1rem; text-transform: uppercase; }
+        .slide-title { font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1.5rem; max-width: 800px; line-height: 1.2; }
+        .slide-btn { display: inline-block; background: white; color: black; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 99px; transition: transform 0.2s; }
+        .slide-btn:hover { transform: translateY(-2px); }
+        .slider-dots { position: absolute; bottom: 1.5rem; right: 3rem; z-index: 4; display: flex; gap: 0.5rem; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; }
+        .dot.active { background: white; }
+
+        /* === Container Layout === */
+        .container { max-width: 1200px; margin: 3rem auto; padding: 0 1.5rem; }
+
+        /* === Contests Section === */
+        .dash-card { background: var(--surface); padding: 2rem; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 3rem; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem;}
+        .dash-header h2 { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; margin: 0; }
+        
+        .header-actions { display: flex; align-items: center; gap: 1rem; }
+        .nav-arrows { display: flex; gap: 0.5rem; }
+        .nav-btn {
+            background: var(--bg); border: 1px solid var(--border); color: var(--text); 
+            width: 32px; height: 32px; border-radius: 50%; display: flex; 
+            justify-content: center; align-items: center; cursor: pointer; transition: 0.2s;
+        }
+        .nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .view-all { color: var(--primary); font-weight: 500; font-size: 0.95rem; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+
+        /* Scrollable Row */
+        .contests-scroll { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 0.5rem; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; }
+        .contests-scroll::-webkit-scrollbar { display: none; }
+        .contest-item {
+            flex: 0 0 320px; height: 240px; scroll-snap-align: start;
+            background: var(--bg); padding: 1.5rem; border-radius: 8px; 
+            border: 1px solid var(--border); display: flex; flex-direction: column;
+        }
+        .contest-content h3 { margin-bottom: 0.5rem; font-size: 1.1rem; line-height: 1.3; }
+        .contest-desc { font-size: 0.85rem; color: var(--text-muted); display: -webkit-box; line-clamp: 2; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .contest-dates { 
+            font-size: 0.75rem; color: var(--text-muted); background: var(--surface); 
+            padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid var(--border); 
+            display: inline-block; 
+            margin-top: auto; 
+            margin-bottom: 0.75rem; 
+            align-self: flex-start; 
+        }
+        .contest-badge { 
+            margin-top: auto; 
+            width: 100%; padding: 0.6rem 1rem; border-radius: 99px; font-size: 0.85rem; 
+            font-weight: bold; text-align: center; border: none; cursor: pointer; 
+            color: white; background: var(--primary); transition: 0.2s; 
+        }
+        .contest-dates + .contest-badge { margin-top: 0; }
+        .contest-badge:hover { opacity: 0.9; }
+        .badge-urgent { background: #ef4444; }
+        .badge-new { background: #10b981; }
+
+        /* === Modal Popup (Vertical List) === */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+            padding: 1rem;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 600px; max-height: 85vh;
+            border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); animation: scaleIn 0.2s ease-out;
+        }
+        @keyframes scaleIn { from { transform: scale(0.95); opacity: 0;} to { transform: scale(1); opacity: 1;} }
+        
+        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { font-size: 1.25rem; margin: 0; }
+        .close-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .close-btn:hover { color: var(--primary); }
+        
+        .modal-body { padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; }
+        .modal-body .contest-item { flex: none; width: 100%; height: auto; min-height: 180px; }
+
+        /* === Project Categories === */
+        .category-section { margin-bottom: 4rem; }
+        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-4px); border-color: var(--primary); }
+        .card-img { width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid var(--border); }
+        .card-body { padding: 1.25rem; }
+        .card-tag { font-size: 0.75rem; color: var(--primary); font-weight: bold; text-transform: uppercase; }
+        .card-title { margin: 0.5rem 0; font-size: 1.1rem; line-height: 1.4; }
+
+        /* === Perfect Mobile Constraints & Layout Framework === */
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; margin: 1.5rem auto; width: 100%; }
+            nav { flex-direction: column; padding: 1rem; }
+            .nav-left { flex-direction: column; width: 100%; }
+            .search-form { max-width: 100%; }
+            .slide-content { padding: 2rem 1.5rem; text-align: center; }
+            .slider-dots { right: 50%; transform: translateX(50%); bottom: 1rem; }
+
+            /* Remove padding restriction on mobile wrappers to let lists reach boundaries */
+            .dash-card { padding: 1.25rem 0; background: transparent; border: none; box-shadow: none; margin-bottom: 2rem; }
+            
+            /* Align titles and functional See More buttons on a clean horizontal line */
+            .dash-header, .category-header {
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 0 0.25rem;
+                margin-bottom: 1rem;
+                width: 100%;
+                flex-wrap: nowrap !important;
+            }
+            
+            .dash-header h2, .category-header h2 {
+                font-size: 1.2rem;
+                font-weight: 700;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 70%;
+            }
+
+            .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+            .nav-arrows { display: none; } /* Arrow keys clutter mobile views */
+            
+            /* Force row transformation and safe bounding blocks */
+            .contests-scroll,
+            .project-grid {
+                display: flex !important;
+                grid-template-columns: none !important;
+                gap: 1rem;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                scroll-snap-type: x mandatory;
+                padding: 0.25rem 0.25rem 1rem 0.25rem;
+                width: 100%;
+                -webkit-overflow-scrolling: touch;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            .contests-scroll::-webkit-scrollbar,
+            .project-grid::-webkit-scrollbar { display: none !important; }
+
+            /* Force standard horizontal dimensions without page bloating */
+            .contest-item,
+            .project-grid .card {
+                flex: 0 0 280px !important;
+                width: 280px !important;
+                scroll-snap-align: start;
+                box-sizing: border-box;
+                background: var(--surface);
+                border-radius: var(--radius);
+                border: 1px solid var(--border);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <custom-header></custom-header>
+
+    <!-- Full-Width Hero Slider -->
+    <div class="hero-slider" id="hero-slider"></div>
+
+    <main id="main-content" class="container">
+        
+        <!-- Live Contests Section -->
+        <div id="contests-card" class="dash-card" style="display: none;">
+            <div class="dash-header">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                    Active Contests
+                </h2>
+                <div class="header-actions">
+                    <div class="nav-arrows">
+                        <button class="nav-btn" onclick="scrollContests(-1)" aria-label="Previous">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <button class="nav-btn" onclick="scrollContests(1)" aria-label="Next">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                    <a href="#" class="view-all" onclick="openModal(event)">See More →</a>
+                </div>
+            </div>
+            
+            <!-- Horizontal Scroll Container -->
+            <div id="contests-container" class="contests-scroll"></div>
+        </div>
+
+        <!-- Dynamic Projects Container -->
+        <div id="home-projects-container"></div>
+    </main>
+
+    <!-- Contests Popup Modal -->
+    <div class="modal-overlay" id="contestsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>All Active Contests</h2>
+                <button class="close-btn" onclick="closeModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <!-- Vertical list injected here via JS -->
+            <div class="modal-body" id="modal-contests-list"></div>
+        </div>
+    </div>
+
+    <!-- Professional Footer -->
+    <custom-footer></custom-footer>
+
+    <script>
+        // === Theme Logic (Icons) ===
+        const sunIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+        const moonIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+        
+        function updateThemeIcon() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.getElementById('themeToggleBtn').innerHTML = isDark ? sunIcon : moonIcon;
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon();
+        }
+
+        // === Contests Horizontal Navigation ===
+        function scrollContests(direction) {
+            const container = document.getElementById('contests-container');
+            container.scrollBy({ left: direction * 344, behavior: 'smooth' });
+        }
+
+        // === Modal Controls ===
+        const modal = document.getElementById('contestsModal');
+        function openModal(e) {
+            e.preventDefault();
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // === Hero Slider Logic ===
+        async function loadNews() {
+            const slider = document.getElementById('hero-slider');
+            try {
+                const res = await fetch('/data/updates.json');
+                const data = await res.json();
+                if(!data.length) throw new Error("Empty");
+
+                let html = '';
+                let dots = '<div class="slider-dots">';
+                
+                data.forEach((item, index) => {
+                    const activeClass = index === 0 ? 'active' : '';
+                    html += `
+                        <div class="slide ${activeClass}">
+                            <img src="${item.image}" alt="">
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <span class="slide-tag">${item.tag || 'Announcement'}</span>
+                                <h1 class="slide-title">${item.title}</h1>
+                                ${(item.btnText && /[a-zA-Z0-9]/.test(item.btnText)) 
+                                    ? `<a href="${item.url}" class="slide-btn">${item.btnText}</a>` 
+                                    : ''}
+                            </div>
+                        </div>
+                    `;
+                    dots += `<div class="dot ${activeClass}" onclick="goToSlide(${index})"></div>`;
+                });
+                dots += '</div>';
+                slider.innerHTML = html + dots;
+                startSlider(data.length);
+            } catch (e) {
+                slider.style.display = 'none';
+            }
+        }
+
+        let currentSlide = 0;
+        function startSlider(total) {
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % total;
+                goToSlide(currentSlide);
+            }, 5000); 
+        }
+        function goToSlide(index) {
+            currentSlide = index;
+            document.querySelectorAll('.slide').forEach((el, i) => el.classList.toggle('active', i === index));
+            document.querySelectorAll('.dot').forEach((el, i) => el.classList.toggle('active', i === index));
+        }
+
+        // === Contests Loading Logic ===
+        async function loadContests() {
+            const container = document.getElementById('contests-container');
+            const modalList = document.getElementById('modal-contests-list');
+            const parent = document.getElementById('contests-card');
+            
+            try {
+                const res = await fetch('/data/contests.json');
+                const data = await res.json();
+                if(!data.length) throw new Error("Empty");
+
+                const today = new Date();
+                today.setHours(0,0,0,0);
+
+                let htmlContent = '';
+
+                data.forEach(item => {
+                    let btnText = "Join Contest";
+                    let btnClass = "";
+                    let dateHtml = "";
+
+                    if (item.startDate && item.endDate) {
+                        const startDate = new Date(item.startDate); startDate.setHours(0,0,0,0);
+                        const endDate = new Date(item.endDate); endDate.setHours(0,0,0,0);
+
+                        if (!isNaN(startDate) && !isNaN(endDate)) {
+                            const daysSinceStart = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                            const daysUntilEnd = Math.floor((endDate - today) / (1000 * 60 * 60 * 24));
+                            
+                            if (daysUntilEnd < 0) return;
+                            
+                            if (daysUntilEnd === 0) { btnText = "Ends Today!"; btnClass = "badge-urgent"; } 
+                            else if (daysUntilEnd <= 5) { btnText = `Ends in ${daysUntilEnd} Days`; btnClass = "badge-urgent"; } 
+                            else if (daysSinceStart === 0) { btnText = "Started Today"; btnClass = "badge-new"; } 
+                            else if (daysSinceStart === 1) { btnText = "Started Yesterday"; btnClass = "badge-new"; }
+
+                            const formatOptions = { month: 'short', day: 'numeric' };
+                            dateHtml = `<div class="contest-dates">🗓️ ${startDate.toLocaleDateString('en-US', formatOptions)} — ${endDate.toLocaleDateString('en-US', formatOptions)}</div>`;
+                        }
+                    }
+
+                    const cardHtml = `
+                        <div class="contest-item">
+                            <div class="contest-content">
+                                <h3>${item.title}</h3>
+                                <p class="contest-desc">${item.desc}</p>
+                            </div>
+                            ${dateHtml}
+                            <button class="contest-badge ${btnClass}" onclick="window.location.href='${item.url}'">${btnText}</button>
+                        </div>
+                    `;
+                    htmlContent += cardHtml;
+                });
+
+                if (htmlContent) {
+                    container.innerHTML = htmlContent;
+                    modalList.innerHTML = htmlContent;
+                    parent.style.display = 'block';
+                }
+            } catch (e) {
+                parent.style.display = 'none';
+            }
+        }
+
+        // === Home Projects ===
+        async function loadHomeProjects() {
+            const container = document.getElementById('home-projects-container');
+            try {
+                const res = await fetch('/data/hprojects.json');
+                const data = await res.json();
+                
+                let html = '';
+                data.forEach(category => {
+                    let projHtml = '';
+                    category.projects.forEach(p => {
+                        projHtml += `
+                            <a href="${p.url}" class="card">
+                                <img src="${p.image}" alt="${p.name}" class="card-img">
+                                <div class="card-body">
+                                    <span class="card-tag">${p.level}</span>
+                                    <h3 class="card-title">${p.name}</h3>
+                                    <p style="font-size: 0.85rem; color: var(--text-muted);">By ${p.author}</p>
+                                </div>
+                            </a>
+                        `;
+                    });
+
+                    html += `
+                        <section class="category-section">
+                            <div class="category-header">
+                                <h2>${category.categoryName}</h2>
+                                <a href="projects.html?category=${category.categorySlug}" class="view-all">See More →</a>
+                            </div>
+                            <div class="project-grid">
+                                ${projHtml}
+                            </div>
+                        </section>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                console.error("Failed to load home projects");
+            }
+        }
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            updateThemeIcon();
+            loadNews();
+            loadContests();
+            loadHomeProjects();
+        });
+    </script>
+    <script src="navibar.js" defer></script>
+</body>
+</html>
