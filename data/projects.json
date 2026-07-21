@@ -2,7 +2,7 @@
   {
     "title": "Ultrasonic Radar System",
     "tags": "Arduino, Radar, Servo, Processing",
-    "category": "arduino",
+    "category": "arduino,new",
     "author": "Maya Lin",
     "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500",
     "url": "/projects/smart-robot.html"
@@ -18,7 +18,7 @@
   {
     "title": "DIY Self-Draining Soap Holder",
     "tags": "3D Printing, CAD, DIY, Home",
-    "category": "3d-printing",
+    "category": "3d-printing,new",
     "author": "Elena Rostova",
     "image": "https://csg.us-east-1.prd.tinkercad.com/things/b6Gt9HSWakX/t725.png?rev=1784136580130000000&s=&v=1&cb=1784142440472",
     "url": "/project/soap-holder-3d"
@@ -42,7 +42,7 @@
   {
     "title": "Smart Bin",
     "tags": "Arduino, Ultrasonic, Servo, Automation",
-    "category": "arduino",
+    "category": "arduino,beginner",
     "author": "Chloe Bennett",
     "image": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=500",
     "url": "/project/smart-dustbin"
@@ -66,7 +66,7 @@
   {
     "title": "Temperature & Humidity Weather Station",
     "tags": "ESP8266, DHT11, IoT, Blynk",
-    "category": "iot",
+    "category": "iot,beginner",
     "author": "Nikhil Sharma",
     "image": "https://media.istockphoto.com/id/2244837279/photo/digital-weather-station-showing-indoor-temperature-and-humidity-in-cozy-home-bedroom-interior.jpg?s=612x612&w=0&k=20&c=vAEr_y8zEIH-CVaHpOd28gDZJu4HFX8BZNTh1V1Ixk4=",
     "url": "/project/temp-humidity-station"
@@ -82,7 +82,7 @@
   {
     "title": "Automatic Rain Detection Alarm System",
     "tags": "Arduino, Rain Sensor, Buzzer, Weather",
-    "category": "arduino",
+    "category": "arduino,beginner",
     "author": "Zoe Henderson",
     "image": "https://media.istockphoto.com/id/1476190237/photo/summer-rain-raindrops-bad-weather-depression.jpg?s=612x612&w=0&k=20&c=GUJvhhU3WVvHhJ3kU4E33fVUzICegLq1sh2msWS5kNk=",
     "url": "/project/rain-detector"
@@ -98,7 +98,7 @@
   {
     "title": "IoT Soil & Plant Moisture Monitor",
     "tags": "ESP32, Sensors, IoT, Blynk, Plants",
-    "category": "iot",
+    "category": "iot,beginner",
     "author": "Amara Okafor",
     "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500",
     "url": "/project/iot-plant-monitor"

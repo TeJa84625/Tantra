@@ -1,19 +1,120 @@
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Learn - Web IOT</title>
-        <script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Hardware Hub</title>
+
+    <!-- Pre-render Theme Handler (Prevents Flash of Unstyled Content) -->
+    <script>
+        (function () {
             const savedTheme = localStorage.getItem('theme');
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const deviceTheme = systemPrefersDark ? 'dark' : 'light';
-            const finalTheme = (savedTheme === null || savedTheme === 'default') ? deviceTheme : savedTheme;
-            document.documentElement.setAttribute('data-theme', finalTheme);
-        </script>
-    </head>
-    <body>
-        <custom-header></custom-header>
-        <custom-footer></custom-footer>
-    </body>
+            const systemQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+            function getTheme() {
+                if (savedTheme && savedTheme !== 'default') {
+                    return savedTheme;
+                }
+                return systemQuery.matches ? 'dark' : 'light';
+            }
+
+            // Apply theme immediately before rendering
+            document.documentElement.setAttribute('data-theme', getTheme());
+
+            // Auto-update if user changes OS preferences while browsing
+            systemQuery.addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme') || localStorage.getItem('theme') === 'default') {
+                    document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                }
+            });
+        })();
+    </script>
+
+    <!-- Base Styling & Layout -->
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --accent-color: #2563eb;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.85rem;
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--accent-color);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 450px;
+            line-height: 1.6;
+        }
+    </style>
+
     <script src="navibar.js" defer></script>
+</head>
+
+<body>
+
+    <custom-header></custom-header>
+
+    <main>
+        <span class="badge">Store Launch</span>
+        <h1>Hardware Hub Is Coming</h1>
+        <p>We’re curating top-rated devices, exclusive direct-from-maker prices, and step-by-step guides—all under one roof.
+            Premium gear for makers and engineers, made accessible.</p>
+    </main>
+
+    <custom-footer></custom-footer>
+
+</body>
+
 </html>

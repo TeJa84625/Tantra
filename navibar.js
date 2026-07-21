@@ -323,7 +323,7 @@ class CustomFooter extends HTMLElement {
                             <li><a href="/projects.html">Community Projects</a></li>
                             <li><a href="/learn.html">Learn & Courses</a></li>
                             <li><a href="/index.html#main-content">Active Contests</a></li>
-                            <li><a href="/shop.html">Hardware Store</a></li>
+                            <li><a href="/shop.html">Hardware Hub</a></li>
                         </ul>
                     </div>
 

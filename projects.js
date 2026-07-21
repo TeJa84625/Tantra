@@ -22,6 +22,58 @@ function toggleTheme() {
     updateThemeIcon();
 }
 
+document.addEventListener('DOMContentLoaded', updateVerificationUI);
+
+        function isCodeVerified() {
+            const uploadBtn = document.querySelector('.upload-btn');
+            if (uploadBtn && uploadBtn.hasAttribute('data-verified')) {
+                return uploadBtn.getAttribute('data-verified') === 'true';
+            }
+            const ideContainer = document.querySelector('.ide-container');
+            return ideContainer && ideContainer.getAttribute('data-verified') === 'true';
+        }
+
+        function updateVerificationUI() {
+            const badge = document.getElementById('codeVerificationBadge');
+            if (!badge) return;
+
+            const verified = isCodeVerified();
+            if (verified) {
+                badge.className = 'verification-badge verified';
+                badge.innerHTML = `
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    Verified
+                `;
+            } else {
+                badge.className = 'verification-badge unverified';
+                badge.innerHTML = `
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v6h-2V7zm1 10c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
+                    Unverified
+                `;
+            }
+        }
+
+        function checkVerificationGuard() {
+            if (!isCodeVerified()) {
+                return confirm("Notice: The project code was not verified / currently under process. Please proceed with caution.\n\nDo you wish to continue?");
+            }
+            return true;
+        }
+
+        function handleUploadClick() {
+            if (checkVerificationGuard()) {
+                openFlasher();
+            }
+        }
+
+        function handleCopyCode() {
+            if (checkVerificationGuard()) {
+                if (typeof copyCode === 'function') {
+                    copyCode();
+                }
+            }
+        }
+
 // === Native Context Sharing Operations ===
 async function shareProject() {
     if (navigator.share) {
@@ -36,7 +88,7 @@ async function shareProject() {
         }
     } else {
         navigator.clipboard.writeText(window.location.href);
-        alert("Project link saved to clipboard data memory!");
+        alert("Project link saved to clipboard!");
     }
 }
 
@@ -44,7 +96,7 @@ function copyCode() {
     const codeElement = document.getElementById('sourceCode');
     if (codeElement) {
         navigator.clipboard.writeText(codeElement.innerText);
-        alert("Source matrix text copied to execution clipboard buffer.");
+        alert("Project code copied to clipboard!");
     }
 }
 

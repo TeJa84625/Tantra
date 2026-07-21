@@ -424,44 +424,75 @@
 
         // === Home Projects ===
         async function loadHomeProjects() {
-            const container = document.getElementById('home-projects-container');
-            try {
-                const res = await fetch('/data/hprojects.json');
-                const data = await res.json();
-                
-                let html = '';
-                data.forEach(category => {
-                    let projHtml = '';
-                    category.projects.forEach(p => {
-                        projHtml += `
-                            <a href="${p.url}" class="card">
-                                <img src="${p.image}" alt="${p.name}" class="card-img">
-                                <div class="card-body">
-                                    <span class="card-tag">${p.level}</span>
-                                    <h3 class="card-title">${p.name}</h3>
-                                    <p style="font-size: 0.85rem; color: var(--text-muted);">By ${p.author}</p>
-                                </div>
-                            </a>
-                        `;
+                const container = document.getElementById('home-projects-container');
+                try {
+                    const [hprojectsRes, projectsRes] = await Promise.all([
+                        fetch('/data/hprojects.json'),
+                        fetch('/data/projects.json')
+                    ]);
+
+                    if (!hprojectsRes.ok || !projectsRes.ok) {
+                        throw new Error("Failed to load JSON files");
+                    }
+
+                    const categories = await hprojectsRes.json();
+                    const allProjects = await projectsRes.json();
+
+                    // Build lookup map by project title
+                    const projectMap = new Map();
+                    allProjects.forEach(p => {
+                        if (p.title) {
+                            projectMap.set(p.title.trim().toLowerCase(), p);
+                        }
                     });
 
-                    html += `
-                        <section class="category-section">
-                            <div class="category-header">
-                                <h2>${category.categoryName}</h2>
-                                <a href="projects.html?category=${category.categorySlug}" class="view-all">See More →</a>
-                            </div>
-                            <div class="project-grid">
-                                ${projHtml}
-                            </div>
-                        </section>
-                    `;
-                });
-                container.innerHTML = html;
-            } catch (e) {
-                console.error("Failed to load home projects");
+                    let html = '';
+
+                    categories.forEach(category => {
+                        let projHtml = '';
+
+                        if (Array.isArray(category.projects)) {
+                            category.projects.forEach(title => {
+                                const project = projectMap.get(title.trim().toLowerCase());
+
+                                if (project) {
+                                    // Extract first tag as tag badge or fallback
+                                    const firstTag = project.tags ? project.tags.split(',')[0].trim() : category.categoryName;
+
+                                    projHtml += `
+                                    <a href="${project.url}" class="card">
+                                        <img src="${project.image}" alt="${project.title}" class="card-img" loading="lazy">
+                                        <div class="card-body">
+                                            <span class="card-tag">${firstTag}</span>
+                                            <h3 class="card-title">${project.title}</h3>
+                                            <p style="font-size: 0.85rem; color: var(--text-muted);">By ${project.author || 'Unknown'}</p>
+                                        </div>
+                                    </a>
+                                `;
+                                }
+                            });
+                        }
+
+                        if (projHtml !== '') {
+                            html += `
+                            <section class="category-section">
+                                <div class="category-header">
+                                    <h2>${category.categoryName}</h2>
+                                    <a href="projects.html?category=${category.categorySlug}" class="view-all">See More →</a>
+                                </div>
+                                <div class="project-grid">
+                                    ${projHtml}
+                                </div>
+                            </section>
+                        `;
+                        }
+                    });
+
+                    container.innerHTML = html;
+                } catch (e) {
+                    console.error("Failed to load home projects:", e);
+                }
             }
-        }
 
         // Initialization
         window.addEventListener('DOMContentLoaded', () => {
